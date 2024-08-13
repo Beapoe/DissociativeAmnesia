@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.1"
+gradle = "2.3.3"
 gson = "2.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -8,6 +9,7 @@ appcompat = "1.6.1"
 material = "1.10.0"
 
 [libraries]
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

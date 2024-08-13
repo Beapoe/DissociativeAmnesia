@@ -1,8 +1,8 @@
 package pers.beapoe.dissociativeamnesia;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.os.Process;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 public class CustomApplication extends Application {
     private ArrayList<Chapter> Chapters = new ArrayList<>();
@@ -32,20 +32,25 @@ public class CustomApplication extends Application {
         return gson.toJson(toSerialize);
     }
 
-    public static <T extends Serializable> String SerializeList(List<T> toSerialize){
+    public static <T extends Serializable> String SerializeList(ArrayList<T> toSerialize){
         Gson gson = new Gson();
         return gson.toJson(toSerialize);
     }
 
-    public static <T extends Serializable> T Deserialize(String json,Class<T> clazz){
+    public static <T extends Serializable> T Deserialize(String json){
         Gson gson =new Gson();
         Type type = new TypeToken<T>(){}.getType();
         return gson.fromJson(json,type);
     }
 
-    public static <T extends Serializable> List<T> DeserializeList(String json,Class<T> clazz){
+    public static <T extends Serializable> ArrayList<T> DeserializeList(String json){
+        if(Objects.equals(json, "")){
+            Log.e("CustomApplication:Deserialize(String json)","Data local save went wrong",new Exception("存储本地数据时出错"));
+            android.os.Process.killProcess(Process.myPid());
+            System.exit(1);
+        }
         Gson gson =new Gson();
-        Type type = new TypeToken<List<T>>(){}.getType();
+        Type type = new TypeToken<ArrayList<T>>(){}.getType();
         return gson.fromJson(json,type);
     }
 

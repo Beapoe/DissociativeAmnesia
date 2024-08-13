@@ -2,6 +2,7 @@ package pers.beapoe.dissociativeamnesia;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Process;
 import android.util.Log;
 
@@ -10,7 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Chapter implements Serializable {
@@ -22,10 +26,11 @@ public class Chapter implements Serializable {
         this.name = name;
     }
 
+    public void setPath(String path){this.path = path;}
     public String getPath(){
         return path;
     }
-
+    public void setName(String name){this.name = name;}
     public String getName(){
         return name;
     }
@@ -34,12 +39,11 @@ public class Chapter implements Serializable {
         CustomApplication app = (CustomApplication) activity.getApplication();
         boolean result = false;
         try {
-            BufferedReader br = new BufferedReader(new FileReader(path));
+            AssetManager assetManager = activity.getAssets();
+            InputStream is = assetManager.open(name);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
             String NovelName = br.readLine().replaceAll("\\s","");
-            String ChapterName = br.readLine().replaceAll("\\s","");
-            boolean FirstLine = NovelName.equals(app.getNovelName());
-            boolean SecondLine = Objects.equals(RemoveSuffix(name), ChapterName);
-            result =  FirstLine && SecondLine;
+            result = NovelName.equals(app.getNovelName());
         } catch (IOException e) {
             Log.e("Chapter:Check(Activity activity)","Error reading file:"+name,new IOException("阅读文件："+name+"时出错"));
             Process.killProcess(Process.myPid());
@@ -48,26 +52,19 @@ public class Chapter implements Serializable {
         return result;
     }
 
-    private static String RemoveSuffix(String raw){
-        int index = raw.lastIndexOf(".txt");
-        String result = "";
-        if(index == -1){
-            Log.e("Error","No suffix found",new RuntimeException("后缀未找到"));
-            Process.killProcess(Process.myPid());
-            System.exit(1);
-        }else{
-            result =  raw.substring(0,index)+raw.substring(index+ ".txt".length());
-        }
-        return result;
-    }
-
     public String Load(Context context){
         String result = "";
-        try (InputStream is = context.getAssets().open(name)){
-            byte[] buffer = new byte[is.available()];
-            //noinspection ResultOfMethodCallIgnored
-            is.read(buffer);
-            result = new String(buffer);
+        try{
+            ArrayList<String> lines = new ArrayList<>();
+            AssetManager assetManager = context.getAssets();
+            InputStream is = assetManager.open(name);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+            String line;
+            while((line = reader.readLine())!=null){
+                lines.add(line);
+            }
+            reader.close();
+             result = String.join("\n",lines);
         }catch (IOException e) {
             Log.e("Chapter:Load(Context context)","Error reading file:"+name,new IOException("阅读文件："+name+"时出错"));
             Process.killProcess(Process.myPid());

@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-
+    //noinspection GradlePluginVersion
     implementation libs.appcompat
     implementation libs.material
     implementation libs.gson
