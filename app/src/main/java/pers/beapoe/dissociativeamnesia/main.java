@@ -1,9 +1,11 @@
 package pers.beapoe.dissociativeamnesia;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Process;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -54,5 +56,9 @@ public class main extends AppCompatActivity {
                 Read.setText(Chapters.get(ReadPoint).Load(this));
             }
         }
+    }
+
+    public void Contents_OnClick(View v){
+        startActivity(new Intent(this, Contents.class));
     }
 }

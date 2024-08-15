@@ -14,6 +14,7 @@ import java.util.Objects;
 
 public class CustomApplication extends Application {
     private ArrayList<Chapter> Chapters = new ArrayList<>();
+    private static final Gson gson = new Gson();
 
     public String getNovelName() {
         return "解离性失忆";
@@ -28,17 +29,14 @@ public class CustomApplication extends Application {
     }
 
     public static <T extends Serializable> String Serialize(T toSerialize){
-        Gson gson = new Gson();
         return gson.toJson(toSerialize);
     }
 
     public static <T extends Serializable> String SerializeList(ArrayList<T> toSerialize){
-        Gson gson = new Gson();
         return gson.toJson(toSerialize);
     }
 
     public static <T extends Serializable> T Deserialize(String json){
-        Gson gson =new Gson();
         Type type = new TypeToken<T>(){}.getType();
         return gson.fromJson(json,type);
     }
@@ -49,7 +47,6 @@ public class CustomApplication extends Application {
             android.os.Process.killProcess(Process.myPid());
             System.exit(1);
         }
-        Gson gson =new Gson();
         Type type = new TypeToken<ArrayList<T>>(){}.getType();
         return gson.fromJson(json,type);
     }
