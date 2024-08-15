@@ -22,9 +22,7 @@ public class Chapter implements Serializable {
     private boolean isRead = false;
     private String ChapterName;
 
-    public Chapter(String name){
-        this.name = name;
-    }
+    public Chapter(String name){if(!Objects.equals(name, "images") && !Objects.equals(name, "webkit")) this.name = name;}
 
     public void setName(String name){this.name = name;}
     public String getName(){

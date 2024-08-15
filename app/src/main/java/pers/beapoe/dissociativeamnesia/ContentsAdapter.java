@@ -34,20 +34,21 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.Conten
     public void onBindViewHolder(@NonNull ContentsViewHolder holder, @SuppressLint("RecyclerView") int position) {
         if(Chapters.get(position).isRead()){
             holder.content.setText(Chapters.get(position).getChapterName());
+            holder.content.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra("Content",Chapters.get(position).Load(activity));
+                    activity.setResult(Activity.RESULT_OK,intent);
+                    activity.finish();
+                }
+            });
         }else{
             String surprise = "恭喜发现彩蛋";
             byte[] temp = surprise.getBytes(StandardCharsets.ISO_8859_1);
             holder.content.setText(new String(temp, StandardCharsets.UTF_8));
         }
-        holder.content.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("Content",Chapters.get(position).Load(activity));
-                activity.setResult(Activity.RESULT_OK,intent);
-                activity.finish();
-            }
-        });
+
     }
 
     @Override

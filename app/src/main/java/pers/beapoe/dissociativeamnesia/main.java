@@ -7,7 +7,6 @@ import android.os.Process;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -43,25 +42,25 @@ public class main extends AppCompatActivity {
         if(!sp.getBoolean("Read",false)){
             editor.putBoolean("FirstRead",true);
             ArrayList<Chapter> Chapters = ((CustomApplication)getApplication()).getChapters();
-            Chapter FirstChapter = new Chapter("Chapter1.txt");
-            FirstChapter.setRead(true);
-            Chapters.add(FirstChapter);
+            ChapterLoader loader = new ChapterLoader(this.getAssets());
+            Chapters = loader.LoadChapters();
+            Chapters.get(0).setRead(true);
             app.setChapters(Chapters);
             editor.putString("Chapters",CustomApplication.SerializeList(Chapters));
             editor.putInt("Current",0);
             editor.apply();
             try {
-                if(FirstChapter.Check(this)){
+                if(Chapters.get(0).Check(this)){
                     Log.e("Main:OnCreate(Bundle savedInstanceState)","Novel name or FirstChapter name doesn't match");
                     Process.killProcess(Process.myPid());
                     System.exit(1);
                 }else{
-                    String FirstChapterContent = FirstChapter.Load(this);
+                    String FirstChapterContent = Chapters.get(0).Load(this);
                     Read.setText(FirstChapterContent);
                     //TODO:设计xml界面，加上将文本添加到界面的逻辑
                 }
             } catch (FileNotFoundException e) {
-                Log.e("Main:OnCreate(Bundle savedInstanceState)","Error reading file:"+ FirstChapter.getName(),new FileNotFoundException("阅读文件："+ FirstChapter.getName()+"时出错"));
+                Log.e("Main:OnCreate(Bundle savedInstanceState)","Error reading file:"+ Chapters.get(0).getName(),new FileNotFoundException("阅读文件："+ Chapters.get(0).getName()+"时出错"));
                 Process.killProcess(Process.myPid());
                 System.exit(1);
             }
