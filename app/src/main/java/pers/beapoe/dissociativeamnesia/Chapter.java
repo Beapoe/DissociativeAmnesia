@@ -18,18 +18,14 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Chapter implements Serializable {
-    private String path;
     private String name;
+    private boolean isRead = false;
+    private String ChapterName;
 
     public Chapter(String name){
-        path = "assets/"+name;
         this.name = name;
     }
 
-    public void setPath(String path){this.path = path;}
-    public String getPath(){
-        return path;
-    }
     public void setName(String name){this.name = name;}
     public String getName(){
         return name;
@@ -63,6 +59,7 @@ public class Chapter implements Serializable {
             while((line = reader.readLine())!=null){
                 lines.add(line);
             }
+            ChapterName = lines.get(1);
             reader.close();
              result = String.join("\n",lines);
         }catch (IOException e) {
@@ -71,5 +68,21 @@ public class Chapter implements Serializable {
             System.exit(1);
         }
         return result;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public String getChapterName() {
+        return ChapterName;
+    }
+
+    public void setChapterName(String chapterName) {
+        ChapterName = chapterName;
     }
 }

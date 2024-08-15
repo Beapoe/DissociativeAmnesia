@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/ReadParent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/Read"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <TableRow
-                android:id="@+id/Menu"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/Read"
-                android:layout_alignParentBottom="true">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Read">
 
                 <Button
-                    android:id="@+id/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/Contents"
                     android:onClick="Contents_OnClick"
-                    android:text="Button" />
-            </TableRow>
+                    android:text="@string/Contents"
+                    style="@style/Buttons" />
+            </RelativeLayout>
+
         </RelativeLayout>
     </ScrollView>
+
 </RelativeLayout>

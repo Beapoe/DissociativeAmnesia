@@ -22,11 +22,14 @@ public class main extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("sp",MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         TextView Read = findViewById(R.id.Read);
+        CustomApplication app = (CustomApplication) getApplication();
         if(!sp.getBoolean("Read",false)){
             editor.putBoolean("FirstRead",true);
             ArrayList<Chapter> Chapters = ((CustomApplication)getApplication()).getChapters();
             Chapter FirstChapter = new Chapter("Chapter1.txt");
+            FirstChapter.setRead(true);
             Chapters.add(FirstChapter);
+            app.setChapters(Chapters);
             editor.putString("Chapters",CustomApplication.SerializeList(Chapters));
             editor.putInt("Current",0);
             editor.apply();
