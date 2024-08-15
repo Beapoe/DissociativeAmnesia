@@ -53,7 +53,7 @@ public class main extends AppCompatActivity {
             editor.putString("Chapters",CustomApplication.SerializeList(Chapters));
             editor.putInt("Current",0);
             if(!editor.commit()){
-                Log.e(TAG,"Boolean data local save went wrong",new Exception("布尔数据本地储存时出错"));
+                Log.e("Main:OnCreate(Bundle SavedInstanceState)","Boolean data local save went wrong",new Exception("布尔数据本地储存时出错"));
                 android.os.Process.killProcess(Process.myPid());
                 System.exit(1);
             }
@@ -73,8 +73,9 @@ public class main extends AppCompatActivity {
                 System.exit(1);
             }
         }else{
+            Log.i(TAG,String.valueOf(!sp.getBoolean("FirstRead",false)));
             if(!sp.getBoolean("FirstRead",false)){
-                Log.e("Main:OnCreate(Bundle SavedInstanceState)","Boolean data local save went wrong",new Exception("布尔数据本地储存时出错"));
+                Log.e("Main:OnCreate(Bundle SavedInstanceState)","Boolean data local read went wrong",new Exception("布尔数据本地读取时出错"));
                 android.os.Process.killProcess(Process.myPid());
                 System.exit(1);
             }else{
@@ -92,29 +93,37 @@ public class main extends AppCompatActivity {
     }
 
     public void Previous_OnClick(View v){
+        final String TAG = "Main:Previous_OnClick";
+        Log.i(TAG,String.valueOf(app.getCurrentReadPoint()));
         int ReadPoint = app.getCurrentReadPoint();
         if(ReadPoint==0){
             Toast.makeText(getApplicationContext(),"最初之前，一片虚无",Toast.LENGTH_SHORT).show();
         }else{
             TextView Read = findViewById(R.id.Read);
             ArrayList<Chapter> Chapters = app.getChapters();
-            Read.setText(Chapters.get(ReadPoint--).Load(this));
-            app.setCurrentReadPoint(ReadPoint--);
+            int temp = ReadPoint-1;
+            Read.setText(Chapters.get(temp).Load(this));
+            app.setCurrentReadPoint(temp);
         }
+        Log.i(TAG,String.valueOf(app.getCurrentReadPoint()));
     }
 
     public void Next_OnClick(View v){
+        final String TAG = "Main:Next_OnClick";
+        Log.i(TAG,String.valueOf(app.getCurrentReadPoint()));
         int ReadPoint = app.getCurrentReadPoint();
         ArrayList<Chapter> Chapters = app.getChapters();
-        if(ReadPoint==Chapters.size()){
+        if(ReadPoint==Chapters.size()-1){
             Toast.makeText(getApplicationContext(),"无尽之后，迷雾茫茫",Toast.LENGTH_SHORT).show();
         }else{
-            if(!Chapters.get(ReadPoint++).isRead()) Chapters.get(ReadPoint++).setRead(true);
+            int temp = ReadPoint+1;
+            if(!Chapters.get(temp).isRead()) Chapters.get(temp).setRead(true);
             TextView Read = findViewById(R.id.Read);
-            Read.setText(Chapters.get(ReadPoint++).Load(this));
-            app.setCurrentReadPoint(ReadPoint++);
+            Read.setText(Chapters.get(temp).Load(this));
+            app.setCurrentReadPoint(temp);
             app.setChapters(Chapters);
         }
+        Log.i(TAG,String.valueOf(app.getCurrentReadPoint()));
     }
 
 }
