@@ -15,6 +15,7 @@ import java.util.Objects;
 public class CustomApplication extends Application {
     private ArrayList<Chapter> Chapters = new ArrayList<>();
     private static final Gson gson = new Gson();
+    private int CurrentReadPoint = 0;
 
     public String getNovelName() {
         return "解离性失忆";
@@ -28,27 +29,34 @@ public class CustomApplication extends Application {
         Chapters = chapters;
     }
 
-    public static <T extends Serializable> String Serialize(T toSerialize){
+    public static String Serialize(Chapter toSerialize){
         return gson.toJson(toSerialize);
     }
 
-    public static <T extends Serializable> String SerializeList(ArrayList<T> toSerialize){
+    public static String SerializeList(ArrayList<Chapter> toSerialize){
         return gson.toJson(toSerialize);
     }
 
-    public static <T extends Serializable> T Deserialize(String json){
-        Type type = new TypeToken<T>(){}.getType();
+    public static Chapter Deserialize(String json){
+        Type type = new TypeToken<Chapter>(){}.getType();
         return gson.fromJson(json,type);
     }
 
-    public static <T extends Serializable> ArrayList<T> DeserializeList(String json){
+    public static ArrayList<Chapter> DeserializeList(String json){
         if(Objects.equals(json, "")){
             Log.e("CustomApplication:Deserialize(String json)","Data local save went wrong",new Exception("存储本地数据时出错"));
             android.os.Process.killProcess(Process.myPid());
             System.exit(1);
         }
-        Type type = new TypeToken<ArrayList<T>>(){}.getType();
+        Type type = new TypeToken<ArrayList<Chapter>>(){}.getType();
         return gson.fromJson(json,type);
     }
 
+    public int getCurrentReadPoint() {
+        return CurrentReadPoint;
+    }
+
+    public void setCurrentReadPoint(int currentReadPoint) {
+        CurrentReadPoint = currentReadPoint;
+    }
 }

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">解离性失忆</string>
     <string name="Contents">目录</string>
+    <string name="Previous">上章</string>
+    <string name="Next">下章</string>
+    <string name="BlowUp">放大</string>
+    <string name="Minificate">缩小</string>
 </resources>

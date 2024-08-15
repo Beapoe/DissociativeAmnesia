@@ -17,19 +17,57 @@
             <TextView
                 android:id="@+id/Read"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="34sp"
+                android:textStyle="bold" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/Read">
+                android:layout_below="@id/Read"
+                android:orientation="horizontal"
+                android:weightSum="5">
 
                 <Button
                     android:id="@+id/Contents"
+                    style="@style/Buttons"
+                    android:layout_weight="1"
                     android:onClick="Contents_OnClick"
                     android:text="@string/Contents"
-                    style="@style/Buttons" />
-            </RelativeLayout>
+                    tools:ignore="VisualLintButtonSize" />
+
+                <Button
+                    android:id="@+id/Previous"
+                    style="@style/Buttons"
+                    android:layout_weight="1"
+                    android:onClick="Previous_OnClick"
+                    android:text="@string/Previous"
+                    tools:ignore="VisualLintButtonSize" />
+
+                <Button
+                    android:id="@+id/Next"
+                    style="@style/Buttons"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="Next_OnClick"
+                    android:text="@string/Next"
+                    tools:ignore="VisualLintButtonSize" />
+
+                <Button
+                    android:id="@+id/BlowUp"
+                    style="@style/Buttons"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/BlowUp"
+                    tools:ignore="VisualLintButtonSize" />
+
+                <Button
+                    android:id="@+id/Minificate"
+                    style="@style/Buttons"
+                    android:layout_weight="1"
+                    android:text="@string/Minificate"
+                    tools:ignore="VisualLintButtonSize" />
+            </LinearLayout>
 
         </RelativeLayout>
     </ScrollView>
