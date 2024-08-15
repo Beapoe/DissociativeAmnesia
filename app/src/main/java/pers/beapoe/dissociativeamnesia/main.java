@@ -1,10 +1,12 @@
 package pers.beapoe.dissociativeamnesia;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Process;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +22,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class main extends AppCompatActivity {
+    // 定义一个ActivityResultLauncher对象，用于启动其他Activity
     private ActivityResultLauncher<Intent> launcher;
+    // 定义一个CustomApplication对象，用于获取全局变量
     CustomApplication app;
 
     @Override
@@ -29,7 +33,9 @@ public class main extends AppCompatActivity {
         setContentView(R.layout.main);
         final String TAG = "Main:OnCreate(Bundle SavedInstanceState)";
         app = (CustomApplication) getApplication();
+        // 获取TextView对象
         TextView Read = findViewById(R.id.Read);
+        // 注册ActivityResultLauncher对象，用于启动其他Activity
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult o) {
@@ -40,29 +46,39 @@ public class main extends AppCompatActivity {
                 }
             }
         });
+        // 获取SharedPreferences对象
         SharedPreferences sp = getSharedPreferences("sp",MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         Log.i(TAG,String.valueOf(!sp.getBoolean("FirstRead", false)));
+        // 判断是否是第一次读取
         if(!sp.getBoolean("FirstRead", false)){
+            // 如果是第一次读取，则将FirstRead设置为true
             editor.putBoolean("FirstRead",true);
+            // 获取Chapter对象列表
             ArrayList<Chapter> Chapters = ((CustomApplication)getApplication()).getChapters();
+            // 加载Chapter对象列表
             ChapterLoader loader = new ChapterLoader(this.getAssets());
             Chapters = loader.LoadChapters();
+            // 设置第一个Chapter为已读
             Chapters.get(0).setRead(true);
             app.setChapters(Chapters);
+            // 将Chapter对象列表序列化并保存到SharedPreferences中
             editor.putString("Chapters",CustomApplication.SerializeList(Chapters));
-            editor.putInt("Current",0);
+            editor.putInt("CurrentReadPoint",0);
+            // 提交SharedPreferences的修改
             if(!editor.commit()){
                 Log.e("Main:OnCreate(Bundle SavedInstanceState)","Boolean data local save went wrong",new Exception("布尔数据本地储存时出错"));
                 android.os.Process.killProcess(Process.myPid());
                 System.exit(1);
             }
             try {
+                // 检查Chapter对象列表中的第一个Chapter是否匹配
                 if(Chapters.get(0).Check(this)){
                     Log.e("Main:OnCreate(Bundle savedInstanceState)","Novel name or FirstChapter name doesn't match");
                     Process.killProcess(Process.myPid());
                     System.exit(1);
                 }else{
+                    // 加载第一个Chapter的内容
                     String FirstChapterContent = Chapters.get(0).Load(this);
                     Read.setText(FirstChapterContent);
                     //TODO:设计xml界面，加上将文本添加到界面的逻辑
@@ -74,6 +90,7 @@ public class main extends AppCompatActivity {
             }
         }else{
             Log.i(TAG,String.valueOf(!sp.getBoolean("FirstRead",false)));
+            // 如果不是第一次读取，则从SharedPreferences中读取Chapter对象列表
             if(!sp.getBoolean("FirstRead",false)){
                 Log.e("Main:OnCreate(Bundle SavedInstanceState)","Boolean data local read went wrong",new Exception("布尔数据本地读取时出错"));
                 android.os.Process.killProcess(Process.myPid());
@@ -81,20 +98,22 @@ public class main extends AppCompatActivity {
             }else{
                 ArrayList<Chapter> Chapters = CustomApplication.DeserializeList(sp.getString("Chapters",""));
                 app.setChapters(Chapters);
-                int ReadPoint = sp.getInt("Current",0);
+                int ReadPoint = sp.getInt("CurrentReadPoint",0);
                 app.setCurrentReadPoint(ReadPoint);
+                Read.setTextSize(sp.getInt("TextSize",14));
+                app.setTextSize(sp.getInt("TextSize",14));
                 Read.setText(Chapters.get(ReadPoint).Load(this));
             }
         }
     }
 
+    // 点击Contents按钮时，启动Contents Activity
     public void Contents_OnClick(View v){
         launcher.launch(new Intent(this,Contents.class));
     }
 
+    // 点击Previous按钮时，读取上一个Chapter的内容
     public void Previous_OnClick(View v){
-        final String TAG = "Main:Previous_OnClick";
-        Log.i(TAG,String.valueOf(app.getCurrentReadPoint()));
         int ReadPoint = app.getCurrentReadPoint();
         if(ReadPoint==0){
             Toast.makeText(getApplicationContext(),"最初之前，一片虚无",Toast.LENGTH_SHORT).show();
@@ -105,12 +124,10 @@ public class main extends AppCompatActivity {
             Read.setText(Chapters.get(temp).Load(this));
             app.setCurrentReadPoint(temp);
         }
-        Log.i(TAG,String.valueOf(app.getCurrentReadPoint()));
     }
 
+    // 点击Next按钮时，读取下一个Chapter的内容
     public void Next_OnClick(View v){
-        final String TAG = "Main:Next_OnClick";
-        Log.i(TAG,String.valueOf(app.getCurrentReadPoint()));
         int ReadPoint = app.getCurrentReadPoint();
         ArrayList<Chapter> Chapters = app.getChapters();
         if(ReadPoint==Chapters.size()-1){
@@ -123,7 +140,46 @@ public class main extends AppCompatActivity {
             app.setCurrentReadPoint(temp);
             app.setChapters(Chapters);
         }
-        Log.i(TAG,String.valueOf(app.getCurrentReadPoint()));
     }
 
+    // 点击BlowUp按钮时，放大文本
+    public void BlowUp_OnClick(View v){
+        final int MAX = 24;
+        TextView Read = findViewById(R.id.Read);
+        if(px2sp(Read.getTextSize(),this)==MAX){
+            Toast.makeText(getApplicationContext(),"放大至极，细节隐于无形",Toast.LENGTH_SHORT).show();
+        }else{
+            Read.setTextSize(TypedValue.COMPLEX_UNIT_SP,px2sp(Read.getTextSize(),this)+2);
+            app.setTextSize(px2sp(Read.getTextSize(),this)+2);
+        }
+    }
+
+    // 点击Minificate按钮时，缩小文本
+    public void Minificate_OnClick(View v){
+        final int MIN = 8;
+        TextView Read = findViewById(R.id.Read);
+        if(px2sp(Read.getTextSize(),this)==MIN){
+            Toast.makeText(getApplicationContext(),"细小入微，字隐虚空无痕",Toast.LENGTH_SHORT).show();
+        }else{
+            Read.setTextSize(TypedValue.COMPLEX_UNIT_SP,px2sp(Read.getTextSize(),this)-2);
+            app.setTextSize(px2sp(Read.getTextSize(),this)-2);
+        }
+    }
+
+    // 将像素值转换为sp值
+    public static int px2sp(float pxValue, Context context) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences sp = getSharedPreferences("sp",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("Chapters",CustomApplication.SerializeList(app.getChapters()));
+        editor.putInt("CurrentReadPoint",app.getCurrentReadPoint());
+        editor.putInt("TextSize",app.getTextSize());
+        editor.apply();
+    }
 }
