@@ -7,7 +7,12 @@ import android.os.Process;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,13 +20,25 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class main extends AppCompatActivity {
+    private ActivityResultLauncher<Intent> launcher;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        TextView Read = findViewById(R.id.Read);
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult o) {
+                if(o.getResultCode()==RESULT_OK){
+                    if(o.getData()!=null){
+                        Read.setText(o.getData().getStringExtra("Content"));
+                    }
+                }
+            }
+        });
         SharedPreferences sp = getSharedPreferences("sp",MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        TextView Read = findViewById(R.id.Read);
         CustomApplication app = (CustomApplication) getApplication();
         if(!sp.getBoolean("Read",false)){
             editor.putBoolean("FirstRead",true);
@@ -62,6 +79,6 @@ public class main extends AppCompatActivity {
     }
 
     public void Contents_OnClick(View v){
-        startActivity(new Intent(this, Contents.class));
+        launcher.launch(new Intent(this,Contents.class));
     }
 }

@@ -59,7 +59,8 @@ public class Chapter implements Serializable {
             while((line = reader.readLine())!=null){
                 lines.add(line);
             }
-            ChapterName = lines.get(1);
+            lines.remove(0);
+            ChapterName = lines.get(0);
             reader.close();
              result = String.join("\n",lines);
         }catch (IOException e) {

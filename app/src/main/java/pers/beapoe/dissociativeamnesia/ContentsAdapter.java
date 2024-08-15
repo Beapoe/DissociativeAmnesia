@@ -1,6 +1,8 @@
 package pers.beapoe.dissociativeamnesia;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,10 @@ import java.util.ArrayList;
 
 public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.ContentsViewHolder>{
     private ArrayList<Chapter> Chapters;
+    private final Activity activity;
 
     public ContentsAdapter(Activity activity){
+        this.activity = activity;
         Chapters = ((CustomApplication)activity.getApplication()).getChapters();
     }
 
@@ -27,7 +31,7 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.Conten
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ContentsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ContentsViewHolder holder, @SuppressLint("RecyclerView") int position) {
         if(Chapters.get(position).isRead()){
             holder.content.setText(Chapters.get(position).getChapterName());
         }else{
@@ -35,6 +39,15 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.Conten
             byte[] temp = surprise.getBytes(StandardCharsets.ISO_8859_1);
             holder.content.setText(new String(temp, StandardCharsets.UTF_8));
         }
+        holder.content.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("Content",Chapters.get(position).Load(activity));
+                activity.setResult(Activity.RESULT_OK,intent);
+                activity.finish();
+            }
+        });
     }
 
     @Override
