@@ -58,7 +58,7 @@ public class main extends AppCompatActivity {
             ArrayList<Chapter> Chapters = ((CustomApplication)getApplication()).getChapters();
             // 加载Chapter对象列表
             ChapterLoader loader = new ChapterLoader(this.getAssets());
-            Chapters = loader.LoadChapters();
+            Chapters = loader.LoadChapters(this);
             // 设置第一个Chapter为已读
             Chapters.get(0).setRead(true);
             app.setChapters(Chapters);

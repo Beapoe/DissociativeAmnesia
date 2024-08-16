@@ -1,5 +1,7 @@
 package pers.beapoe.dissociativeamnesia;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Process;
 import android.util.Log;
@@ -20,7 +22,7 @@ public class ChapterLoader {
     }
 
     // 定义一个LoadChapters方法，用于加载章节
-    public ArrayList<Chapter> LoadChapters(){
+    public ArrayList<Chapter> LoadChapters(Activity activity){
         // 定义一个TAG常量，用于日志输出
         final String TAG = "ChapterLoader:LoadChapters";
         try {
@@ -33,7 +35,14 @@ public class ChapterLoader {
                     // 如果文件名以.txt结尾
                     if(name.endsWith(".txt")) {
                         // 将文件名添加到Chapters中
-                        Chapters.add(new Chapter(name));
+                        Chapter chapter = new Chapter(name);
+                        if(chapter.Check(activity))
+                            Chapters.add(new Chapter(name));
+                        else{
+                            Log.e(TAG,"Novel name or FirstChapter name doesn't match");
+                            Process.killProcess(Process.myPid());
+                            System.exit(1);
+                        }
                     }
                 }
             }else{

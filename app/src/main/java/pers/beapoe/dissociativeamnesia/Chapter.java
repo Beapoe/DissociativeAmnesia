@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -40,8 +41,8 @@ public class Chapter implements Serializable {
         try {
             AssetManager assetManager = activity.getAssets();
             InputStream is = assetManager.open(name);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
-            String NovelName = br.readLine().replaceAll("\\s","");
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            String NovelName = br.readLine().replaceAll("\\s","").substring(1);
             result = NovelName.equals(app.getNovelName());
         } catch (IOException e) {
             Log.e("Chapter:Check(Activity activity)","Error reading file:"+name,new IOException("阅读文件："+name+"时出错"));
@@ -88,10 +89,5 @@ public class Chapter implements Serializable {
     // 获取章节名称
     public String getChapterName() {
         return ChapterName;
-    }
-
-    // 设置章节名称
-    public void setChapterName(String chapterName) {
-        ChapterName = chapterName;
     }
 }
