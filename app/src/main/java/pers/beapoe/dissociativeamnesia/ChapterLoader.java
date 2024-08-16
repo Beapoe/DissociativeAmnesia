@@ -6,7 +6,11 @@ import android.content.res.AssetManager;
 import android.os.Process;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 // 定义一个ChapterLoader类，用于加载章节
@@ -35,13 +39,34 @@ public class ChapterLoader {
                     // 如果文件名以.txt结尾
                     if(name.endsWith(".txt")) {
                         // 将文件名添加到Chapters中
-                        Chapter chapter = new Chapter(name);
-                        if(chapter.Check(activity))
-                            Chapters.add(new Chapter(name));
-                        else{
-                            Log.e(TAG,"Novel name or FirstChapter name doesn't match");
-                            Process.killProcess(Process.myPid());
-                            System.exit(1);
+
+                        // 获取小说名
+                        ArrayList<String> lines = new ArrayList<>();
+                        AssetManager assetManager = activity.getAssets();
+                        InputStream is = assetManager.open(name);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+                        String NovelName = reader.readLine().trim();
+                        // 分情况生成
+                        if(NovelName.contains("Special")){
+                            Chapter chapter = new Chapter(name,true,activity);
+                            if(chapter.Check(activity)){
+                                Chapters.add(chapter);
+                            }else{
+                                // 如果check失败，自杀
+                                Log.e(TAG,"Novel name doesn't match");
+                                android.os.Process.killProcess(Process.myPid());
+                                System.exit(1);
+                            }
+                        }else{
+                            Chapter chapter = new Chapter(name,false,activity);
+                            if(chapter.Check(activity)){
+                                Chapters.add(chapter);
+                            }else{
+                                // 如果check失败，自杀
+                                Log.e(TAG,"Novel name doesn't match");
+                                android.os.Process.killProcess(Process.myPid());
+                                System.exit(1);
+                            }
                         }
                     }
                 }

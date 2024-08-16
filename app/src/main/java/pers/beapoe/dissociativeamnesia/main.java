@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Process;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -18,7 +20,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.FileNotFoundException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class main extends AppCompatActivity {
@@ -41,7 +47,14 @@ public class main extends AppCompatActivity {
             public void onActivityResult(ActivityResult o) {
                 if(o.getResultCode()==RESULT_OK){
                     if(o.getData()!=null){
-                        Read.setText(o.getData().getStringExtra("Content"));
+                        if(o.getData().getBooleanExtra("isSpecial",false)){
+                            Gson gson = new Gson();
+                            Type type = new TypeToken<SpannableStringBuilder>(){}.getType();
+                            // 解析，设置
+                            Read.setText(gson.fromJson(o.getData().getStringExtra("Content"),type));
+                        }else{
+                            Read.setText(o.getData().getStringExtra("Content"));
+                        }
                     }
                 }
             }
@@ -79,7 +92,7 @@ public class main extends AppCompatActivity {
                     System.exit(1);
                 }else{
                     // 加载第一个Chapter的内容
-                    String FirstChapterContent = Chapters.get(0).Load(this);
+                    String FirstChapterContent = Chapters.get(0).getResult();
                     Read.setText(FirstChapterContent);
                     //TODO:设计xml界面，加上将文本添加到界面的逻辑
                 }
@@ -102,7 +115,11 @@ public class main extends AppCompatActivity {
                 app.setCurrentReadPoint(ReadPoint);
                 Read.setTextSize(sp.getInt("TextSize",14));
                 app.setTextSize(sp.getInt("TextSize",14));
-                Read.setText(Chapters.get(ReadPoint).Load(this));
+                if(Chapters.get(ReadPoint).isSpecial()){
+                    Read.setText(Chapters.get(ReadPoint).getContent());
+                }else{
+                    Read.setText(Chapters.get(ReadPoint).getResult());
+                }
             }
         }
     }
@@ -121,13 +138,26 @@ public class main extends AppCompatActivity {
             TextView Read = findViewById(R.id.Read);
             ArrayList<Chapter> Chapters = app.getChapters();
             int temp = ReadPoint-1;
-            Read.setText(Chapters.get(temp).Load(this));
+            if(Chapters.get(temp).isSpecial()){
+                Read.setText(Chapters.get(temp).getContent());
+            }else{
+                Read.setText(Chapters.get(temp).getResult());
+            }
             app.setCurrentReadPoint(temp);
         }
     }
 
     // 点击Next按钮时，读取下一个Chapter的内容
     public void Next_OnClick(View v){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NextOnClick(v);
+            }
+        },100);
+    }
+    public void NextOnClick(View v){
         int ReadPoint = app.getCurrentReadPoint();
         ArrayList<Chapter> Chapters = app.getChapters();
         if(ReadPoint==Chapters.size()-1){
@@ -136,7 +166,13 @@ public class main extends AppCompatActivity {
             int temp = ReadPoint+1;
             if(!Chapters.get(temp).isRead()) Chapters.get(temp).setRead(true);
             TextView Read = findViewById(R.id.Read);
-            Read.setText(Chapters.get(temp).Load(this));
+            if(Chapters.get(temp).isSpecial()){
+                SpannableStringBuilder content = Chapters.get(temp).getContent();
+                int length = content.length();
+                Read.setText(content);
+            }else{
+                Read.setText(Chapters.get(temp).getResult());
+            }
             app.setCurrentReadPoint(temp);
             app.setChapters(Chapters);
         }

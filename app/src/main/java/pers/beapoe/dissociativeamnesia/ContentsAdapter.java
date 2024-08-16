@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -52,7 +54,13 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.Conten
                     // 创建一个Intent对象
                     Intent intent = new Intent();
                     // 将当前章节的内容传递给Intent
-                    intent.putExtra("Content",Chapters.get(position).Load(activity));
+                    if(Chapters.get(position).isSpecial()){
+                        Gson gson =new Gson();
+                        intent.putExtra("isSpecial",Chapters.get(position).isSpecial());
+                        intent.putExtra("Content",gson.toJson(Chapters.get(position).getContent()));
+                    }else{
+                        intent.putExtra("Content",Chapters.get(position).getResult());
+                    }
                     // 设置Activity的结果码为RESULT_OK
                     activity.setResult(Activity.RESULT_OK,intent);
                     // 结束当前Activity
