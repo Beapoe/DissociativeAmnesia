@@ -34,13 +34,13 @@ public class Chapter implements Serializable {
     // 定义String内容
     private String result = "";
 
-    // 构造函数，传入章节名称
+    // 构造函数
     public Chapter(String name,boolean isSpecial,Context context){
         if(!Objects.equals(name, "images") && !Objects.equals(name, "webkit")){
             this.name = name;
             this.isSpecial = isSpecial;
         }
-        final String TAG = "Chapter:Load(...)";
+        final String TAG = "Chapter:Chapter(...)";
         try{
             ArrayList<String> lines = new ArrayList<>();
             AssetManager assetManager = context.getAssets();
@@ -79,18 +79,16 @@ public class Chapter implements Serializable {
                                 if(chars.get(inside)=='>' && chars.get(inside+1)=='•'){
                                     FoundEnd = true;
                                     // 将此时的嵌套迭代标识的下一位，即‘•’设为Span的结束索引
-                                    span.setEnd(inside+1);
+                                    span.setEnd(inside-2);
                                     // 将该Span添加到Spans里，并使Span计数加一
                                     spans.add(span);
                                     SpanTimes += 1;
                                     // 删除初始开始符
-                                    chars.remove(span.getStart()+1);
-                                    chars.remove(span.getStart()+2);
+                                    for(int remove=0;remove<2;remove++) chars.remove(span.getStart()+1);
                                     // 删除初始结束符
-                                    chars.remove(span.getEnd()-1);
-                                    chars.remove(span.getEnd());
+                                    for(int remove=0;remove<2;remove++) chars.remove(span.getEnd());
                                     //将初始结束符的索引设为外部迭代标识符
-                                    outside = inside;
+                                    outside = span.getEnd();
                                     break inner;
                                 }
                             }
@@ -106,20 +104,20 @@ public class Chapter implements Serializable {
                             boolean FoundEnd = false;
                             StringBuilder sb = new StringBuilder();
 
-                            // 定义替换内容开始，结束索引
-                            int end = 0;
-
                             // 嵌套循环寻找替换结束符
                             inner:
                             for(int inside=outside+2;inside<chars.size();inside++){
                                 if(chars.get(inside)=='&' && chars.get(inside+1)=='•'){
                                     FoundEnd = true;
-                                    end = inside+2;
+                                    // 删除文本之中要替换的字符
+                                    chars.subList(outside,inside+2).clear();
                                     break inner;
                                 }
                                 // 将替换开始符之后的字符作为Replacement的值
                                 sb.append(chars.get(inside));
                             }
+                            // 删除多余空格
+                            if(chars.get(outside)=='\n') chars.subList(outside-5,outside).clear();
                             if(!FoundEnd){
                                 // 如果没找到替换结束符，自杀
                                 Log.e(TAG,"No end(&•) found");
@@ -127,8 +125,7 @@ public class Chapter implements Serializable {
                                 System.exit(1);
                             }
                             Replacements.add(sb.toString());
-                            // 删除文本之中要替换的字符
-                            chars.subList(outside,end).clear();
+                            outside -= 1;
                         }
                     }
                 }catch (IndexOutOfBoundsException e){

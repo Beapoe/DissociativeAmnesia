@@ -84,23 +84,10 @@ public class main extends AppCompatActivity {
                 android.os.Process.killProcess(Process.myPid());
                 System.exit(1);
             }
-            try {
-                // 检查Chapter对象列表中的第一个Chapter是否匹配
-                if(Chapters.get(0).Check(this)){
-                    Log.e("Main:OnCreate(Bundle savedInstanceState)","Novel name or FirstChapter name doesn't match");
-                    Process.killProcess(Process.myPid());
-                    System.exit(1);
-                }else{
-                    // 加载第一个Chapter的内容
-                    String FirstChapterContent = Chapters.get(0).getResult();
-                    Read.setText(FirstChapterContent);
-                    //TODO:设计xml界面，加上将文本添加到界面的逻辑
-                }
-            } catch (FileNotFoundException e) {
-                Log.e("Main:OnCreate(Bundle savedInstanceState)","Error reading file:"+ Chapters.get(0).getName(),new FileNotFoundException("阅读文件："+ Chapters.get(0).getName()+"时出错"));
-                Process.killProcess(Process.myPid());
-                System.exit(1);
-            }
+            // 加载第一个Chapter的内容
+            String FirstChapterContent = Chapters.get(0).getResult();
+            Read.setText(FirstChapterContent);
+            //TODO:设计xml界面，加上将文本添加到界面的逻辑
         }else{
             Log.i(TAG,String.valueOf(!sp.getBoolean("FirstRead",false)));
             // 如果不是第一次读取，则从SharedPreferences中读取Chapter对象列表
@@ -168,7 +155,6 @@ public class main extends AppCompatActivity {
             TextView Read = findViewById(R.id.Read);
             if(Chapters.get(temp).isSpecial()){
                 SpannableStringBuilder content = Chapters.get(temp).getContent();
-                int length = content.length();
                 Read.setText(content);
             }else{
                 Read.setText(Chapters.get(temp).getResult());
