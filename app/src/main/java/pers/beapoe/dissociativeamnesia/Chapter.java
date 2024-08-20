@@ -106,11 +106,17 @@ public class Chapter implements Serializable {
 
                             // 嵌套循环寻找替换结束符
                             inner:
-                            for(int inside=outside+2;inside<chars.size();inside++){
-                                if(chars.get(inside)=='&' && chars.get(inside+1)=='•'){
+                            for (int inside = outside + 2; inside < chars.size()-1; inside++) {
+                                if (chars.get(inside) == '&' && chars.get(inside + 1) == '•') {
                                     FoundEnd = true;
                                     // 删除文本之中要替换的字符
-                                    chars.subList(outside,inside+2).clear();
+                                    if(inside+2==chars.size()){
+                                        chars.subList(outside,inside).clear();
+                                        for(int counter=0;counter<2;counter++) chars.remove(outside);
+                                        outside -= 1;
+                                    }else{
+                                        chars.subList(outside, inside + 2).clear();
+                                    }
                                     break inner;
                                 }
                                 // 将替换开始符之后的字符作为Replacement的值
@@ -118,6 +124,11 @@ public class Chapter implements Serializable {
                             }
                             // 删除多余空格
                             if(chars.get(outside)=='\n') chars.subList(outside-5,outside).clear();
+                            if(chars.get(outside)==' ') {
+                                chars.subList(outside - 3, outside).clear();
+                                chars.remove(outside - 3);
+                                outside = outside - 4;
+                            }
                             if(!FoundEnd){
                                 // 如果没找到替换结束符，自杀
                                 Log.e(TAG,"No end(&•) found");
@@ -137,7 +148,9 @@ public class Chapter implements Serializable {
                 // 设置替换内容
                 for(int index=0;index<spans.size();index++) spans.get(index).setReplacement(Replacements.get(index));
                 // 合成Spannable内容
-                for(char ch:chars) content.append(ch);
+                StringBuilder sb = new StringBuilder();
+                for(char ch:chars) sb.append(ch);
+                content.append(sb.toString());
                 // 为每个Span设置color并添加到Spannable
                 for(Span span:spans) content.setSpan(span.getColor(),span.getStart(),span.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }else{
