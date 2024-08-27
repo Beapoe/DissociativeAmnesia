@@ -7,7 +7,7 @@ public class Span {
     private int start = 0;
     private int end = 0;
     private String Replacement = "";
-    private ForegroundColorSpan color = new ForegroundColorSpan(Color.BLUE);
+    private ForegroundColorSpan color = new ForegroundColorSpan(Color.parseColor("#66B2FF"));
 
     public Span(){}
 

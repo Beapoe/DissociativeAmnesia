@@ -144,8 +144,7 @@ public class main extends AppCompatActivity {
             if(!Chapters.get(temp).isRead()) Chapters.get(temp).setRead(true);
             TextView Read = findViewById(R.id.Read);
             if(Chapters.get(temp).isSpecial()){
-                SpannableStringBuilder content = Chapters.get(temp).getContent();
-                Read.setText(content);
+                Read.setText(Chapters.get(temp).getContent());
             }else{
                 Read.setText(Chapters.get(temp).getResult());
             }
