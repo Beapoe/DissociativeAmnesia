@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Process;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -81,6 +83,15 @@ public class ChapterLoader {
             Log.e(TAG,"Error getting list of files in assets",new IOException("获取assets文件夹下文件列表时出错"));
             android.os.Process.killProcess(Process.myPid());
             System.exit(1);
+        }
+        for(Chapter cha:Chapters){
+            if(cha.isSpecial()){
+                for(Span span:cha.getSpans()){
+                    SpannableStringBuilder text = cha.getContent();
+                    text.setSpan(new TextClick(activity),span.getStart(),span.getEnd(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    cha.setContent(text);
+                }
+            }
         }
         // 返回Chapters
         return Chapters;

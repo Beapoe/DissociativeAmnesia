@@ -33,6 +33,8 @@ public class Chapter implements Serializable {
     private SpannableStringBuilder content = new SpannableStringBuilder();
     // 定义String内容
     private String result = "";
+    // 定义Span类型
+    private ArrayList<CustomApplication.SpanType> types = new ArrayList<>();
 
     // 构造函数
     public Chapter(String name,boolean isSpecial,Context context){
@@ -56,6 +58,16 @@ public class Chapter implements Serializable {
 
             // 特殊情况讨论
             if(isSpecial){
+                try {
+                    for(String data:lines.get(lines.size()-1).split(",")) {
+                        types.add(CustomApplication.SpanType.valueOf(data.toUpperCase()));
+                    }
+                } catch (IllegalArgumentException e) {
+                    Log.e(TAG,"Error making types",new IllegalArgumentException("提取类别失败"));
+                    android.os.Process.killProcess(Process.myPid());
+                    System.exit(1);
+                }
+                lines.remove(lines.size()-1);
                 ArrayList<String> Replacements = new ArrayList<>();
                 // 将String转换为char的ArrayList，方便索引补全
                 ArrayList<Character> chars = new ArrayList<>();
@@ -151,6 +163,7 @@ public class Chapter implements Serializable {
                 StringBuilder sb = new StringBuilder();
                 for(char ch:chars) sb.append(ch);
                 content.append(sb.toString());
+                for(int i=0;i<spans.size();i++) spans.get(i).setType(types.get(i));
                 // 为每个Span设置color并添加到Spannable
                 for(Span span:spans) content.setSpan(span.getColor(),span.getStart(),span.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }else{
@@ -246,6 +259,17 @@ public class Chapter implements Serializable {
             android.os.Process.killProcess(Process.myPid());
             System.exit(1);
             return null;
+        }
+    }
+
+    public void setContent(SpannableStringBuilder content) {
+        final String TAG = "Chapter:setContent()";
+        if(isSpecial) this.content = content;
+        else{
+            // 如果非特殊章节调用该方法，自杀
+            Log.e(TAG,"Caller isn't a special chapter");
+            android.os.Process.killProcess(Process.myPid());
+            System.exit(1);
         }
     }
 

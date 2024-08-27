@@ -26,6 +26,10 @@ public class CustomApplication extends Application {
     private int CurrentReadPoint = 0;
     // 定义一个int类型的变量，用于存储文本大小
     private int TextSize = 14;
+    // 定义Span类别
+    public enum SpanType{
+        REPLACE
+    }
 
     // 获取小说名称
     public String getNovelName() {

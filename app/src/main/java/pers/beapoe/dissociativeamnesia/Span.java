@@ -8,6 +8,7 @@ public class Span {
     private int end = 0;
     private String Replacement = "";
     private ForegroundColorSpan color = new ForegroundColorSpan(Color.parseColor("#66B2FF"));
+    private CustomApplication.SpanType type;
 
     public Span(){}
 
@@ -37,5 +38,13 @@ public class Span {
 
     public ForegroundColorSpan getColor() {
         return color;
+    }
+
+    public CustomApplication.SpanType getType() {
+        return type;
+    }
+
+    public void setType(CustomApplication.SpanType type) {
+        this.type = type;
     }
 }

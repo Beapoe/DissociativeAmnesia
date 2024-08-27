@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Process;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -32,15 +33,16 @@ public class main extends AppCompatActivity {
     private ActivityResultLauncher<Intent> launcher;
     // 定义一个CustomApplication对象，用于获取全局变量
     CustomApplication app;
+    TextView Read;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        Read = findViewById(R.id.Read);
+        Read.setMovementMethod(LinkMovementMethod.getInstance());
         final String TAG = "Main:OnCreate(...)";
         app = (CustomApplication) getApplication();
-        // 获取TextView对象
-        TextView Read = findViewById(R.id.Read);
         // 注册ActivityResultLauncher对象，用于启动其他Activity
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
@@ -120,7 +122,6 @@ public class main extends AppCompatActivity {
         if(ReadPoint==0){
             Toast.makeText(getApplicationContext(),"最初之前，一片虚无",Toast.LENGTH_SHORT).show();
         }else{
-            TextView Read = findViewById(R.id.Read);
             ArrayList<Chapter> Chapters = app.getChapters();
             int temp = ReadPoint-1;
             if(Chapters.get(temp).isSpecial()){
@@ -141,7 +142,6 @@ public class main extends AppCompatActivity {
         }else{
             int temp = ReadPoint+1;
             if(!Chapters.get(temp).isRead()) Chapters.get(temp).setRead(true);
-            TextView Read = findViewById(R.id.Read);
             if(Chapters.get(temp).isSpecial()){
                 Read.setText(Chapters.get(temp).getContent());
             }else{
@@ -155,7 +155,6 @@ public class main extends AppCompatActivity {
     // 点击BlowUp按钮时，放大文本
     public void BlowUp_OnClick(View v){
         final int MAX = 24;
-        TextView Read = findViewById(R.id.Read);
         if(px2sp(Read.getTextSize(),this)==MAX){
             Toast.makeText(getApplicationContext(),"放大至极，细节隐于无形",Toast.LENGTH_SHORT).show();
         }else{
@@ -167,7 +166,6 @@ public class main extends AppCompatActivity {
     // 点击Minificate按钮时，缩小文本
     public void Minificate_OnClick(View v){
         final int MIN = 8;
-        TextView Read = findViewById(R.id.Read);
         if(px2sp(Read.getTextSize(),this)==MIN){
             Toast.makeText(getApplicationContext(),"细小入微，字隐虚空无痕",Toast.LENGTH_SHORT).show();
         }else{
