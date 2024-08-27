@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Process;
 import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -21,6 +22,7 @@ public class CustomApplication extends Application {
     // 定义一个Gson对象，用于序列化和反序列化
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(SpannableStringBuilder.class,new SpannableStringBuilderAdapter())
+            .registerTypeAdapter(ForegroundColorSpan.class,new ForegroundColorSpanAdapter())
             .create();
     // 定义一个int类型的变量，用于存储当前阅读的章节
     private int CurrentReadPoint = 0;

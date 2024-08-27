@@ -84,12 +84,12 @@ public class ChapterLoader {
             android.os.Process.killProcess(Process.myPid());
             System.exit(1);
         }
-        for(Chapter cha:Chapters){
-            if(cha.isSpecial()){
-                for(Span span:cha.getSpans()){
-                    SpannableStringBuilder text = cha.getContent();
-                    text.setSpan(new TextClick(activity),span.getStart(),span.getEnd(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    cha.setContent(text);
+        for(int n_chapter=0;n_chapter<Chapters.size();n_chapter++){
+            if(Chapters.get(n_chapter).isSpecial()){
+                for(int n_span=0;n_span<Chapters.get(n_chapter).getSpans().size();n_span++){
+                    SpannableStringBuilder text = Chapters.get(n_chapter).getContent();
+                    text.setSpan(new TextClick(activity,n_chapter,n_span),Chapters.get(n_chapter).getSpans().get(n_span).getStart(),Chapters.get(n_chapter).getSpans().get(n_span).getEnd(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Chapters.get(n_chapter).setContent(text);
                 }
             }
         }
