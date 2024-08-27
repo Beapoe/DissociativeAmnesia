@@ -28,7 +28,7 @@ public class ChapterLoader {
     // 定义一个LoadChapters方法，用于加载章节
     public ArrayList<Chapter> LoadChapters(Activity activity){
         // 定义一个TAG常量，用于日志输出
-        final String TAG = "ChapterLoader:LoadChapters";
+        final String TAG = "ChapterLoader:LoadChapters(...)";
         try {
             // 获取assets文件夹下的所有文件名
             String[] files = assetManager.list("");

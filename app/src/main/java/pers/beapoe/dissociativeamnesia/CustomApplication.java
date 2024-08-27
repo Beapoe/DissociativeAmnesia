@@ -60,9 +60,10 @@ public class CustomApplication extends Application {
 
     // 反序列化Chapter对象列表
     public static ArrayList<Chapter> DeserializeList(String json){
+        final String TAG = "CustomApplication:DeserializeList(...)";
         // 如果json为空，则抛出异常并退出程序
         if(Objects.equals(json, "")){
-            Log.e("CustomApplication:Deserialize(String json)","Data local save went wrong",new Exception("存储本地数据时出错"));
+            Log.e(TAG,"Data local save went wrong",new Exception("存储本地数据时出错"));
             android.os.Process.killProcess(Process.myPid());
             System.exit(1);
         }

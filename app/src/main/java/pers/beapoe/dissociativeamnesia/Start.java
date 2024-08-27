@@ -16,6 +16,7 @@ public class Start extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final String TAG = "Start:OnCreate(...)";
         SharedPreferences sp = getSharedPreferences("sp",MODE_PRIVATE);
         if(!sp.getBoolean("DoNotShow",false)){
             setContentView(R.layout.start);
@@ -27,7 +28,7 @@ public class Start extends Activity {
                         SharedPreferences.Editor editor = sp.edit();
                         editor.putBoolean("DoNotShow", true);
                         if (!editor.commit()) {
-                            Log.e("Start:OnCreate(SavedInstanceState)", "Boolean data local save went wrong", new Exception("布尔数据本地储存时出错"));
+                            Log.e(TAG, "Boolean data local save went wrong", new Exception("布尔数据本地储存时出错"));
                             android.os.Process.killProcess(Process.myPid());
                             System.exit(1);
                         }

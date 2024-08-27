@@ -32,15 +32,6 @@ public class Contents extends Activity {
         super.onStop();
         // 获取CustomApplication对象
         CustomApplication app = (CustomApplication)getApplication();
-        // 获取SharedPreferences对象
-        SharedPreferences sp = getSharedPreferences("sp",MODE_PRIVATE);
-        // 获取SharedPreferences.Editor对象
-        SharedPreferences.Editor editor = sp.edit();
-        // 将app.getChapters()序列化为字符串，并保存到SharedPreferences中
-        editor.putString("Chapters",CustomApplication.SerializeList(app.getChapters()));
-        // 将app.getCurrentReadPoint()保存到SharedPreferences中
-        editor.putInt("CurrentReadPoint",app.getCurrentReadPoint());
-        // 提交修改
-        editor.apply();
+        app.save();
     }
 }

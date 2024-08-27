@@ -38,7 +38,7 @@ public class main extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        final String TAG = "Main:OnCreate(Bundle SavedInstanceState)";
+        final String TAG = "Main:OnCreate(...)";
         app = (CustomApplication) getApplication();
         // 获取TextView对象
         TextView Read = findViewById(R.id.Read);
@@ -63,7 +63,6 @@ public class main extends AppCompatActivity {
         // 获取SharedPreferences对象
         SharedPreferences sp = getSharedPreferences("sp",MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        Log.i(TAG,String.valueOf(!sp.getBoolean("FirstRead", false)));
         // 判断是否是第一次读取
         if(!sp.getBoolean("FirstRead", false)){
             // 如果是第一次读取，则将FirstRead设置为true
@@ -81,7 +80,7 @@ public class main extends AppCompatActivity {
             editor.putInt("CurrentReadPoint",0);
             // 提交SharedPreferences的修改
             if(!editor.commit()){
-                Log.e("Main:OnCreate(Bundle SavedInstanceState)","Boolean data local save went wrong",new Exception("布尔数据本地储存时出错"));
+                Log.e(TAG,"Boolean data local save went wrong",new Exception("布尔数据本地储存时出错"));
                 android.os.Process.killProcess(Process.myPid());
                 System.exit(1);
             }
@@ -90,10 +89,9 @@ public class main extends AppCompatActivity {
             Read.setText(FirstChapterContent);
             //TODO:设计xml界面，加上将文本添加到界面的逻辑
         }else{
-            Log.i(TAG,String.valueOf(!sp.getBoolean("FirstRead",false)));
             // 如果不是第一次读取，则从SharedPreferences中读取Chapter对象列表
             if(!sp.getBoolean("FirstRead",false)){
-                Log.e("Main:OnCreate(Bundle SavedInstanceState)","Boolean data local read went wrong",new Exception("布尔数据本地读取时出错"));
+                Log.e(TAG,"Boolean data local read went wrong",new Exception("布尔数据本地读取时出错"));
                 android.os.Process.killProcess(Process.myPid());
                 System.exit(1);
             }else{
@@ -137,15 +135,6 @@ public class main extends AppCompatActivity {
 
     // 点击Next按钮时，读取下一个Chapter的内容
     public void Next_OnClick(View v){
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                NextOnClick(v);
-            }
-        },100);
-    }
-    public void NextOnClick(View v){
         int ReadPoint = app.getCurrentReadPoint();
         ArrayList<Chapter> Chapters = app.getChapters();
         if(ReadPoint==Chapters.size()-1){

@@ -36,11 +36,11 @@ public class Chapter implements Serializable {
 
     // 构造函数
     public Chapter(String name,boolean isSpecial,Context context){
+        final String TAG = "Chapter:Chapter(...)";
         if(!Objects.equals(name, "images") && !Objects.equals(name, "webkit")){
             this.name = name;
             this.isSpecial = isSpecial;
         }
-        final String TAG = "Chapter:Chapter(...)";
         try{
             ArrayList<String> lines = new ArrayList<>();
             AssetManager assetManager = context.getAssets();
@@ -157,7 +157,7 @@ public class Chapter implements Serializable {
                 result = String.join("\n",lines);
             }
         }catch (IOException e) {
-            Log.e("Chapter:Load(Context context)","Error reading file:"+name,new IOException("阅读文件："+name+"时出错"));
+            Log.e(TAG,"Error reading file:"+name,new IOException("阅读文件："+name+"时出错"));
             Process.killProcess(Process.myPid());
             System.exit(1);
         }
@@ -172,6 +172,7 @@ public class Chapter implements Serializable {
 
     // 检查章节是否匹配
     public boolean Check(Activity activity) throws FileNotFoundException {
+        final String TAG = "Chapter:Check(...)";
         CustomApplication app = (CustomApplication) activity.getApplication();
         boolean result = false;
         try {
@@ -188,7 +189,7 @@ public class Chapter implements Serializable {
             }
             result = NovelName.equals(app.getNovelName());
         } catch (IOException e) {
-            Log.e("Chapter:Check(Activity activity)","Error reading file:"+name,new IOException("阅读文件："+name+"时出错"));
+            Log.e(TAG,"Error reading file:"+name,new IOException("阅读文件："+name+"时出错"));
             Process.killProcess(Process.myPid());
             System.exit(1);
         }
