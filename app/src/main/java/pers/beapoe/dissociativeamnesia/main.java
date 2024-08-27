@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.FileNotFoundException;
@@ -48,7 +49,7 @@ public class main extends AppCompatActivity {
                 if(o.getResultCode()==RESULT_OK){
                     if(o.getData()!=null){
                         if(o.getData().getBooleanExtra("isSpecial",false)){
-                            Gson gson = new Gson();
+                            Gson gson = CustomApplication.getGson();
                             Type type = new TypeToken<SpannableStringBuilder>(){}.getType();
                             // 解析，设置
                             Read.setText(gson.fromJson(o.getData().getStringExtra("Content"),type));
@@ -197,11 +198,7 @@ public class main extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        SharedPreferences sp = getSharedPreferences("sp",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("Chapters",CustomApplication.SerializeList(app.getChapters()));
-        editor.putInt("CurrentReadPoint",app.getCurrentReadPoint());
-        editor.putInt("TextSize",app.getTextSize());
-        editor.apply();
+        CustomApplication app = (CustomApplication)getApplication();
+        app.save();
     }
 }

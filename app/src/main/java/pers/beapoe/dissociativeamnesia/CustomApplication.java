@@ -1,10 +1,14 @@
 package pers.beapoe.dissociativeamnesia;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Process;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -15,7 +19,9 @@ public class CustomApplication extends Application {
     // 定义一个Chapter类型的ArrayList，用于存储章节信息
     private ArrayList<Chapter> Chapters = new ArrayList<>();
     // 定义一个Gson对象，用于序列化和反序列化
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(SpannableStringBuilder.class,new SpannableStringBuilderAdapter())
+            .create();
     // 定义一个int类型的变量，用于存储当前阅读的章节
     private int CurrentReadPoint = 0;
     // 定义一个int类型的变量，用于存储文本大小
@@ -82,5 +88,18 @@ public class CustomApplication extends Application {
     // 设置文本大小
     public void setTextSize(int textSize) {
         TextSize = textSize;
+    }
+
+    public static Gson getGson() {
+        return gson;
+    }
+
+    public void save(){
+        SharedPreferences sp = getSharedPreferences("sp",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("Chapters",CustomApplication.SerializeList(getChapters()));
+        editor.putInt("CurrentReadPoint",getCurrentReadPoint());
+        editor.putInt("TextSize",getTextSize());
+        editor.apply();
     }
 }

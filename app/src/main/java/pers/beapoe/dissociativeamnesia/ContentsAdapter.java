@@ -3,6 +3,7 @@ package pers.beapoe.dissociativeamnesia;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ public class ContentsAdapter extends RecyclerView.Adapter<ContentsAdapter.Conten
                     Intent intent = new Intent();
                     // 将当前章节的内容传递给Intent
                     if(Chapters.get(position).isSpecial()){
-                        Gson gson =new Gson();
+                        Gson gson = CustomApplication.getGson();
                         intent.putExtra("isSpecial",Chapters.get(position).isSpecial());
                         intent.putExtra("Content",gson.toJson(Chapters.get(position).getContent()));
                     }else{
