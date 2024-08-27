@@ -70,7 +70,7 @@ public class Chapter implements Serializable {
                         // 如果遇到了初始开始符
                         if(chars.get(outside)=='•' && chars.get(outside+1)=='<'){
                             // 将此时的迭代标识设为Span的开始索引
-                            span.setStart(outside-1);
+                            span.setStart(outside);
                             boolean FoundEnd = false;
 
                             // 嵌套循环从特殊字符之后的字符开始寻找初始结束符
@@ -84,11 +84,11 @@ public class Chapter implements Serializable {
                                     spans.add(span);
                                     SpanTimes += 1;
                                     // 删除初始开始符
-                                    for(int remove=0;remove<2;remove++) chars.remove(span.getStart()+1);
+                                    for(int remove=0;remove<2;remove++) chars.remove(outside);
                                     // 删除初始结束符
                                     for(int remove=0;remove<2;remove++) chars.remove(span.getEnd());
                                     //将初始结束符的索引设为外部迭代标识符
-                                    outside = span.getEnd();
+                                    outside = span.getEnd()-1;
                                     break inner;
                                 }
                             }
