@@ -13,18 +13,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -44,19 +40,16 @@ public class main extends AppCompatActivity {
         final String TAG = "Main:OnCreate(...)";
         app = (CustomApplication) getApplication();
         // 注册ActivityResultLauncher对象，用于启动其他Activity
-        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult o) {
-                if(o.getResultCode()==RESULT_OK){
-                    if(o.getData()!=null){
-                        if(o.getData().getBooleanExtra("isSpecial",false)){
-                            Gson gson = CustomApplication.getGson();
-                            Type type = new TypeToken<SpannableStringBuilder>(){}.getType();
-                            // 解析，设置
-                            Read.setText(gson.fromJson(o.getData().getStringExtra("Content"),type));
-                        }else{
-                            Read.setText(o.getData().getStringExtra("Content"));
-                        }
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), o -> {
+            if(o.getResultCode()==RESULT_OK){
+                if(o.getData()!=null){
+                    if(o.getData().getBooleanExtra("isSpecial",false)){
+                        Gson gson = CustomApplication.getGson();
+                        Type type = new TypeToken<SpannableStringBuilder>(){}.getType();
+                        // 解析，设置
+                        Read.setText(gson.fromJson(o.getData().getStringExtra("Content"),type));
+                    }else{
+                        Read.setText(o.getData().getStringExtra("Content"));
                     }
                 }
             }
@@ -69,7 +62,7 @@ public class main extends AppCompatActivity {
             // 如果是第一次读取，则将FirstRead设置为true
             editor.putBoolean("FirstRead",true);
             // 获取Chapter对象列表
-            ArrayList<Chapter> Chapters = ((CustomApplication)getApplication()).getChapters();
+            ArrayList<Chapter> Chapters;
             // 加载Chapter对象列表
             ChapterLoader loader = new ChapterLoader(this.getAssets());
             Chapters = loader.LoadChapters(this);
