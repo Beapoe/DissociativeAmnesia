@@ -12,14 +12,15 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdk 29
         versionCode 1
-        versionName "1.1"
+        versionName "1.1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
