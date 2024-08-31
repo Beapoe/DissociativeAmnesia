@@ -1,0 +1,155 @@
+{
+  "allFiles": [
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/app/src/main/assets/Chapter1.txt",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    },
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/app/src/main/java/pers/beapoe/dissociativeamnesia/Chapter.java",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    },
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/app/src/main/java/pers/beapoe/dissociativeamnesia/TextClick.java",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    },
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/gradle.properties",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    },
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/settings.gradle",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    },
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/gradle/libs.versions.toml",
+      "selection": {
+        "end": {
+          "column": 15,
+          "index": 40,
+          "line": 2
+        },
+        "start": {
+          "column": 15,
+          "index": 40,
+          "line": 2
+        }
+      }
+    },
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/gradle/wrapper/gradle-wrapper.jar",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    },
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/gradle/wrapper/gradle-wrapper.properties",
+      "selection": {
+        "end": {
+          "column": 69,
+          "index": 164,
+          "line": 3
+        },
+        "start": {
+          "column": 69,
+          "index": 164,
+          "line": 3
+        }
+      }
+    },
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/build.gradle",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    },
+    {
+      "file": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/app/build.gradle",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    }
+  ],
+  "selectedFile": "/data/data/com.itsaky.androidide/files/home/DissociativeAmnesia/gradle/libs.versions.toml"
+}
